@@ -91,6 +91,15 @@ int main(int argc,char **argv) {
 int toggle_dir(int dir){
   int opp_dir;
   // return opp direction
+  if (dir == DN)
+    opp_dir = UP;
+  else if (dir == UP)
+    opp_dir = DN;
+  else if (dir == RT)
+    opp_dir = LT;
+  else
+    opp_dir = RT;
+  
   return opp_dir;
 }
 
@@ -331,5 +340,5 @@ void exit_proc(char *msg){
 }
 
 /*****************************************************************************
- End of file: fif.c. Fifteen Puzzle, Sequential A* 1 processor version.
+ End of file: fifteen.c. Fifteen Puzzle, Sequential A* 1 processor version.
 *****************************************************************************/
