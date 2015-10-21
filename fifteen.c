@@ -276,7 +276,7 @@ int solvable(struct node *cp) {
   return total;	/* return the number we discussed in class today 3/31/2015*/
 }
 
-/* fif 0 1 2 4 5 6 3 8 9 10 7 12 13 14 11 15 astar */
+/* fifteen 0 1 2 4 5 6 3 8 9 10 7 12 13 14 11 15 astar */
 struct node *initialize(int argc, char **argv){
   int i,j,k,npe,n,idx,gidx,inv;
    struct node *tp;
