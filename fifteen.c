@@ -202,6 +202,15 @@ struct node *goal_found(struct node *cp,struct node *gp){
 int count(struct node *cp) {
   int cnt=0;
   //return the number of nodes on the list
+  struct node *tp;
+  tp = cp;
+
+  while(tp)
+  {
+    cnt++;
+    tp = tp->next;
+  }
+
   return cnt;
 }
 
