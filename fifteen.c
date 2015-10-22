@@ -298,9 +298,13 @@ struct node *filter(struct node *succ,struct node *hp){
    struct node *lsp,*rsp;	/* lsp=left succ p, rsp=right succ p */
    struct node *tp;		/* temp ptr */
    //...
-
+   lsp = succ; // succ
+   rsp = hp;  //open - closed
    
-
+   //if node_same == 1
+   // move to closed
+   //else
+   //check next node
    
    return succ;
 }
