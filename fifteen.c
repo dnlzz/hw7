@@ -182,17 +182,46 @@ struct node *prepend(struct node *tp,struct node *sp) {
 struct node *append(struct node *tp,struct node *sp) {
   struct node *cp;
   //.....
+
+  if (sp == NULL) {
+    sp = tp;
+  } else {
+
+    cp = sp;
+    
+    while (cp->next) {
+      cp = cp->next;
+    }
+
+    cp->next = tp; 
+    
+  }
+
   return sp;
 }
 
 void swap(struct node *cp,int i,int j,int k,int l){
   int tmp;
-  //.....
+  //...
+  
+  
 }
 
 struct node *move(struct node *cp,int a,int b,int x,int y,int dir) {
   struct node *newp;
   int i,j,k,l,tmp;
+  newp = (struct node*)malloc(sizeof(struct node));
+  newp = cp;
+
+  for (int i = 0; i < N; i++) {
+    for (int j = 0; j < N; j++) {  
+      newp->board[i][j] = cp->board[i][j]
+    }
+  }
+
+  newp->board[a][b] = 0;
+  newp->board[x][y] = cp->board[a][b];
+  
   // malloc
   // copy from cp
   // swap two vals
@@ -269,6 +298,10 @@ struct node *filter(struct node *succ,struct node *hp){
    struct node *lsp,*rsp;	/* lsp=left succ p, rsp=right succ p */
    struct node *tp;		/* temp ptr */
    //...
+
+   
+
+   
    return succ;
 }
 
