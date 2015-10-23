@@ -66,7 +66,7 @@ int main(int argc,char **argv) {
 
   open=start; 
   iter=0;
-
+  
   while (open) {
     printf("%d: open=%d + clsd=%d = total=%d\n",iter,ocnt,ccnt,ocnt+ccnt);
     ocnt=count(open);
@@ -89,6 +89,8 @@ int main(int argc,char **argv) {
 } /* end of main */
 
 int toggle_dir(int dir){
+    printf("Entered TOGGLE DIR");
+
   int opp_dir;
   // return opp direction
   if (dir == DN)
@@ -142,6 +144,8 @@ void find_parent(struct node *cp,int prev_dir){
 
 // Expand: generate successors of the current node
 struct node *expand(struct node *cp) {
+
+  printf("Entered EXPAND");
   int i,j,k,cnt,row=0,col=j;
   struct node *succ,*tp;
   succ=NULL;
@@ -175,7 +179,7 @@ struct node *expand(struct node *cp) {
 /* attach in the beginning */
 struct node *prepend(struct node *tp,struct node *sp) {
   //.....
-
+    printf("Entered PRE{END");
   if (sp == NULL) {
     sp = tp;
   } else {
@@ -197,6 +201,8 @@ struct node *append(struct node *tp,struct node *sp) {
   struct node *cp;
   //.....
 
+      printf("Entered APPEND");
+  
   if (sp == NULL) {
     sp = tp;
   } else {
@@ -216,12 +222,12 @@ struct node *append(struct node *tp,struct node *sp) {
 
 void swap(struct node *cp,int i,int j,int k,int l){
   int tmp;
-  //...
-  
-  
+  //...  
 }
 
 struct node *move(struct node *cp,int a,int b,int x,int y,int dir) {
+    printf("Entered MOVE!");
+
   struct node *newp;
   int i,j,k,l,tmp;
   newp = (struct node*)malloc(sizeof(struct node));
@@ -248,13 +254,24 @@ struct node *goal_found(struct node *cp,struct node *gp){
   int flg=FALSE;
   // check if succ list has goal
   // if found, return that for finding path else return NULL
-  while (!no {
-
+  struct node *succptr;
+  
+  while (succptr) {
+      
+      if (nodes_same(succptr, gp)) {
+        //same - goal state found
+	printf("FOUND YOUR GOAL!!\n");
+      } else {
+	succptr = succptr->next;
+      }
+      
   }
+  
   return cp;
 }
 
 int count(struct node *cp) {
+  printf("Entered COUTN");
   int cnt=0;
   //return the number of nodes on the list
   struct node *tp;
@@ -262,6 +279,7 @@ int count(struct node *cp) {
 
   while(tp)
   {
+    printf("Count: %d", cnt);
     cnt++;
     tp = tp->next;
   }
@@ -270,6 +288,8 @@ int count(struct node *cp) {
 }
 
 struct node *merge(struct node *succ,struct node *open,int flg) {
+
+  printf("Entered MERGE!");
   struct node *csucc,*copen, *tmp;
 
   csucc = succ;
@@ -327,8 +347,10 @@ int nodes_same(struct node *xp,struct node *yp) {
   Check succ against open and closed. Remove those succ nodes that are in open or closed.
 ******************************************************************************/
 struct node *filter(struct node *succ,struct node *hp){ 
-   struct node *lsp,*rsp;	/* lsp=left succ p, rsp=right succ p */
-   struct node *tp;		/* temp ptr */
+  printf("Entered FILEERET!");
+
+  struct node *lsp,*rsp;	/* lsp=left succ p, rsp=right succ p */
+   struct node *tp, *closed;		/* temp ptr */
    //...
    lsp = succ; // succ
    tp = hp;  //open - closed
