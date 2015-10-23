@@ -61,8 +61,8 @@ int main(int argc,char **argv) {
   
   open=closed=succ=NULL;
   start=initialize(argc,argv);	/* init initial and goal states */
-  perm=solvable(start);		/* check if solvable permutation */
-  if (perm & 1) return 1;
+  // perm=solvable(start);		/* check if solvable permutation */
+  //if (perm & 1) return 1;
 
   open=start; 
   iter=0;
@@ -276,7 +276,7 @@ int count(struct node *cp) {
   //return the number of nodes on the list
   struct node *tp;
   tp = cp;
-
+  
   while(tp)
   {
     printf("Count: %d", cnt);
