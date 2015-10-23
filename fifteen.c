@@ -215,16 +215,16 @@ struct node *move(struct node *cp,int a,int b,int x,int y,int dir) {
 
   for (int i = 0; i < N; i++) {
     for (int j = 0; j < N; j++) {  
-      newp->board[i][j] = cp->board[i][j]
+      newp->board[i][j] = cp->board[i][j];
     }
   }
 
   newp->board[a][b] = 0;
   newp->board[x][y] = cp->board[a][b];
   
-  // malloc
-  // copy from cp
-  // swap two vals
+  // malloc - OK
+  // copy from cp - OK
+  // swap two vals - OK
   // compute f,g,h
   // insert the direction that resulted in this node, used for printing path
   return newp;
@@ -287,7 +287,20 @@ int find_h(int current[N+1][N],int goalp[N+1][N]) {
 /* a=b=x[N][N] */
 int nodes_same(struct node *xp,struct node *yp) {
   int i,j,flg=FALSE;
-  //...
+  //xp = succ yp =open/closed
+  for (i = 0; i < N; i ++) {
+    for (j = 0; j < N; j++) {
+      if ( !xp->board[i][j] = yp->board[i][j] ) {
+        break;
+      } else {
+        
+      }
+    }
+
+    if (j = N) { break; }
+
+  }
+
   return flg;
 }
 
@@ -301,7 +314,7 @@ struct node *filter(struct node *succ,struct node *hp){
    lsp = succ; // succ
    rsp = hp;  //open - closed
    
-   //if node_same == 1
+   //if node_same == TRUE
    // move to closed
    //else
    //check next node
