@@ -175,6 +175,14 @@ struct node *expand(struct node *cp) {
 /* attach in the beginning */
 struct node *prepend(struct node *tp,struct node *sp) {
   //.....
+
+  // if (sp == NULL) {
+  //   sp = tp;
+  // } else {
+  //   tp->next = sp;
+  //   sp = 
+  // }
+
   return sp;
 }
 
@@ -221,7 +229,7 @@ struct node *move(struct node *cp,int a,int b,int x,int y,int dir) {
 
   newp->board[a][b] = 0;
   newp->board[x][y] = cp->board[a][b];
-  
+
   // malloc - OK
   // copy from cp - OK
   // swap two vals - OK
@@ -234,6 +242,9 @@ struct node *goal_found(struct node *cp,struct node *gp){
   int flg=FALSE;
   // check if succ list has goal
   // if found, return that for finding path else return NULL
+  while (!no {
+
+  }
   return cp;
 }
 
@@ -253,10 +264,16 @@ int count(struct node *cp) {
 }
 
 struct node *merge(struct node *succ,struct node *open,int flg) {
-  struct node *csucc,*copen;
+  struct node *csucc,*copen, *tmp;
+
+  csucc = succ;
+  copen = open;
 
   if (flg==DFS) {	/* attach in the front: succ -> ... -> open */
     //...
+    //prepend succ -> open
+    tmp = open;
+
   }else if (flg==BFS) {	  /* attach at the end: open -> ... -> succ */
     //...
   }else if (flg==BEST) {	/* Best first: sort on h value */
@@ -288,18 +305,12 @@ int find_h(int current[N+1][N],int goalp[N+1][N]) {
 int nodes_same(struct node *xp,struct node *yp) {
   int i,j,flg=FALSE;
   //xp = succ yp =open/closed
-  for (i = 0; i < N; i ++) {
-    for (j = 0; j < N; j++) {
-      if ( !xp->board[i][j] = yp->board[i][j] ) {
-        break;
-      } else {
-        
-      }
-    }
+  for (i = 0; i < N; i ++) 
+    for (j = 0; j < N; j++) 
+      if ( xp->board[i][j] != yp->board[i][j] )
+        return flg;
 
-    if (j = N) { break; }
-
-  }
+      flg = TRUE;
 
   return flg;
 }
@@ -312,12 +323,24 @@ struct node *filter(struct node *succ,struct node *hp){
    struct node *tp;		/* temp ptr */
    //...
    lsp = succ; // succ
-   rsp = hp;  //open - closed
+   tp = hp;  //open - closed
    
-   //if node_same == TRUE
+   //if nodes_same == TRUE
    // move to closed
    //else
    //check next node
+
+   while (lsp) {
+
+     if (nodes_same(lsp, tp)) {
+      //same - remove from open? or succ?
+
+     } else {
+      
+      lsp = lsp->next;
+
+     }
+  }
    
    return succ;
 }
