@@ -176,12 +176,18 @@ struct node *expand(struct node *cp) {
 struct node *prepend(struct node *tp,struct node *sp) {
   //.....
 
-  // if (sp == NULL) {
-  //   sp = tp;
-  // } else {
-  //   tp->next = sp;
-  //   sp = 
-  // }
+  if (sp == NULL) {
+    sp = tp;
+  } else {
+
+    while (tp->next != NULL) {
+      tp = tp->next;
+    }
+
+    tp->next = sp;
+    sp = tp;
+
+  }
 
   return sp;
 }
@@ -272,10 +278,12 @@ struct node *merge(struct node *succ,struct node *open,int flg) {
   if (flg==DFS) {	/* attach in the front: succ -> ... -> open */
     //...
     //prepend succ -> open
-    tmp = open;
+    open = prepend(succ, open);
 
   }else if (flg==BFS) {	  /* attach at the end: open -> ... -> succ */
     //...
+    open = append(succ, open);
+
   }else if (flg==BEST) {	/* Best first: sort on h value */
     //...
   }else{			/* A* search: sort on f=g+h value */
@@ -325,23 +333,23 @@ struct node *filter(struct node *succ,struct node *hp){
    lsp = succ; // succ
    tp = hp;  //open - closed
    
-   //if nodes_same == TRUE
-   // move to closed
-   //else
-   //check next node
-
    while (lsp) {
 
-     if (nodes_same(lsp, tp)) {
-      //same - remove from open? or succ?
+      while (tp) {
+  
+        if (nodes_same(lsp, tp)) {
+        //same - remove from open? or succ?
+          printf("NODE THE SAME - REMOVE ME!\n");
+          closed = append(succ, closed);
+       } else {
+          tp = tp->next;
+       }
 
-     } else {
-      
-      lsp = lsp->next;
+    }
 
-     }
-  }
-   
+    lsp = lsp->next;
+
+   }
    return succ;
 }
 
