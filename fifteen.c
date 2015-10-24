@@ -76,13 +76,16 @@ int main(int argc,char **argv) {
     succ = filter(succ,open);		     /* New succ list */
     succ = filter(succ,closed);		     /* New succ list */
     cnt=count(succ);
-    printf("Succ count : %d\n", cnt);
-    cnt=count(open);
-    printf("Open count : %d\n", cnt);
     total=total+cnt;
-    if (succ) open=merge(succ,open,strategy); {/* New open list */
-      closed=append(cp,closed);		      /* New closed */
-    }
+    if (succ) open=merge(succ,open,strategy);/* New open list */
+    closed=append(cp,closed);		      /* New closed */
+    printf("SUCC: \n");
+    print_nodes(succ);
+    printf("OPEN: \n");
+    print_nodes(open);
+    printf("CLOSED: \n");
+    print_nodes(closed);
+    
     if ((cp=goal_found(succ,goal))) {
       printf("GOAL FOUDN\n");
       break;
@@ -191,15 +194,18 @@ struct node *expand(struct node *cp) {
 struct node *prepend(struct node *tp,struct node *sp) {
   //.....
     printf("Entered PRE{END");
+    struct node *cp;
+    cp = tp;
+    
   if (sp == NULL) {
     sp = tp;
   } else {
 
     while (tp->next != NULL) {
-      tp = tp->next;
+      cp = cp->next;
     }
 
-    tp->next = sp;
+    cp->next = sp;
     sp = tp;
 
   }
@@ -212,7 +218,7 @@ struct node *append(struct node *tp,struct node *sp) {
   struct node *cp;
   //.....
 
-      printf("Entered APPEND");
+  //  printf("Entered APPEND");
   
   if (sp == NULL) {
     sp = tp;
@@ -280,7 +286,10 @@ struct node *goal_found(struct node *cp,struct node *gp){
   succptr = cp;
   
   while (succptr) {
-      
+
+    printf("Looking for goal!\n");
+    print_a_node(succptr);
+    
       if (nodes_same(succptr, gp)) {
         //same - goal state found
 	printf("FOUND YOUR GOAL!!\n");
@@ -289,7 +298,7 @@ struct node *goal_found(struct node *cp,struct node *gp){
 	printf("TRYING NEXT BOARD\n");
 	succptr = succptr->next;
       }
-      
+
   }
   
   return cp;
@@ -321,11 +330,11 @@ struct node *merge(struct node *succ,struct node *open,int flg) {
   if (flg==DFS) {	/* attach in the front: succ -> ... -> open */
     //...
     //prepend succ -> open
-    open = prepend(succ, open);
+    //    open = prepend(succ, copen);
 
   }else if (flg==BFS) {	  /* attach at the end: open -> ... -> succ */
     //...
-    open = append(succ, open);
+    //open = append(succ, copen);
 
   }else if (flg==BEST) {	/* Best first: sort on h value */
     //...
@@ -379,14 +388,15 @@ struct node *filter(struct node *succ,struct node *hp){
    tp = hp;  //open - closed
    
    while (lsp) {
-
+     printf("FIRST FILTER WHILE\n");
       while (tp) {
-  
+	printf("SECOND FILTER WHILE\n");
         if (nodes_same(lsp, tp)) {
         //same - remove from open? or succ?
           printf("NODE THE SAME - REMOVE ME!\n");
           closed = append(succ, closed);
        } else {
+	  printf("NOT THE SAME - CONTINUE");
           tp = tp->next;
        }
 
@@ -398,9 +408,9 @@ struct node *filter(struct node *succ,struct node *hp){
    return succ;
 }
 
-void print_nodes(struct node *cp,char name[20]) {
+void print_nodes(struct node *cp/*,char name[20]*/) {
   int i;
-  printf("%s:\n",name);
+  //printf("%s:\n",name);
   while (cp) { print_a_node(cp); cp=cp->next; }
 }
 
