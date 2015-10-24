@@ -68,6 +68,7 @@ int main(int argc,char **argv) {
   open->next=NULL;
   iter=0;
   
+  
   while (open) {
     printf("%d: open=%d + clsd=%d = total=%d\n",iter,ocnt,ccnt,(ocnt+ccnt));
     ocnt=count(open);
@@ -328,6 +329,7 @@ struct node *merge(struct node *succ,struct node *open,int flg) {
   csucc = succ;
   copen = open;
 
+  
   if (flg==DFS) {	/* attach in the front: succ -> ... -> open */
     //...
     //prepend succ -> open
@@ -344,8 +346,6 @@ struct node *merge(struct node *succ,struct node *open,int flg) {
     //...
   }else{			/* A* search: sort on f=g+h value */
     //...
-    printf("MERGE: ELSE PREPEND");
-    open = prepend(csucc, copen);
   }
   return open;
 }
@@ -473,6 +473,8 @@ struct node *initialize(int argc, char **argv){
    else strategy=UNKNOWN;
    printf("strategy=%s\n",strategy_s);
 
+   printf("strategy=%d\n",strategy);
+   
    return start;
 }
 
