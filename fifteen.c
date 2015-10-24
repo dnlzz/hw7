@@ -87,12 +87,7 @@ int main(int argc,char **argv) {
     print_nodes(open);
     printf("CLOSED: \n");
     print_nodes(closed);
-    
-    if ((cp=goal_found(succ,goal))) {
-      printf("GOAL FOUDN\n");
-      break;
-    }
-    
+    if ((cp=goal_found(succ,goal))) break;    
     iter++;
   }
   printf("%s strategy: %d iterations %d nodes\n",strategy_s,iter+1,total);
@@ -298,9 +293,12 @@ struct node *goal_found(struct node *cp,struct node *gp){
 	break;
       } else {
 	printf("TRYING NEXT BOARD\n");
+	print_a_node(succptr);
 	succptr = succptr->next;
       }
 
+      printf("NO MORE SUCC");
+      
   }
   
   return cp;
@@ -371,12 +369,19 @@ int find_h(int current[N+1][N],int goalp[N+1][N]) {
 int nodes_same(struct node *xp,struct node *yp) {
   int i,j,flg=FALSE;
   //xp = succ yp =open/closed
-  for (i = 0; i < N; i ++) 
-    for (j = 0; j < N; j++) 
-      if ( xp->board[i][j] != yp->board[i][j] )
+  for (i = 0; i < N; i ++)
+    for (j = 0; j < N; j++) {
+      if ( xp->board[i][j] != yp->board[i][j] ) {
+	printf("not the same!\n");
+	printf("XP:\n");
+	print_a_node(xp);
+	printf("YP!\n");
+	print_a_node(yp);
         return flg;
+      }      
+    }
 
-      flg = TRUE;
+  flg = TRUE;
 
   return flg;
 }
