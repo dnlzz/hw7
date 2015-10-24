@@ -37,7 +37,7 @@
 
 int level,strategy;
 
-int nodes_same(),str_compare(),count(),find_h();
+int nodes_same(),str_compare(), count(), find_h();
 void swap(),exit_proc(),print_a_node(),print_nodes();
 int toggle_dir(), solvable();
 void find_path(),print_path(),find_parent();
@@ -68,7 +68,7 @@ int main(int argc,char **argv) {
   iter=0;
   
   while (open) {
-    printf("%d: open=%d + clsd=%d = total=%d\n",iter,ocnt,ccnt,ocnt+ccnt);
+    printf("%d: open=%d + clsd=%d = total=%d\n",iter,ocnt,ccnt,(ocnt+ccnt));
     ocnt=count(open);
     ccnt=count(closed);
     cp=open; open=open->next; cp->next=NULL; /* get the first node from open */
@@ -76,10 +76,18 @@ int main(int argc,char **argv) {
     succ = filter(succ,open);		     /* New succ list */
     succ = filter(succ,closed);		     /* New succ list */
     cnt=count(succ);
+    printf("Succ count : %d\n", cnt);
+    cnt=count(open);
+    printf("Open count : %d\n", cnt);
     total=total+cnt;
-    if (succ) open=merge(succ,open,strategy); /* New open list */
-    closed=append(cp,closed);		      /* New closed */
-    if ((cp=goal_found(succ,goal))) break;
+    if (succ) open=merge(succ,open,strategy); {/* New open list */
+      closed=append(cp,closed);		      /* New closed */
+    }
+    if ((cp=goal_found(succ,goal))) {
+      printf("GOAL FOUDN\n");
+      break;
+    }
+    
     iter++;
   }
   printf("%s strategy: %d iterations %d nodes\n",strategy_s,iter+1,total);
@@ -146,6 +154,7 @@ void find_parent(struct node *cp,int prev_dir){
 struct node *expand(struct node *cp) {
 
   printf("Entered EXPAND");
+  
   int i,j,k,cnt,row=0,col=j;
   struct node *succ,*tp;
   succ=NULL;
@@ -156,7 +165,7 @@ struct node *expand(struct node *cp) {
       if (cp->board[i][j]==0) break;
     if (j<N) break;		/* found it */
   }
-
+ 
   if((i+1) < N){		/* DOWN */
     tp = move(cp,i,j,i+1,j,DN);
     succ = append(tp,succ);
@@ -173,6 +182,8 @@ struct node *expand(struct node *cp) {
     tp = move(cp,i,j,i,j-1,LT);
     succ = append(tp,succ);
   }
+
+
   return succ;
 }
 
@@ -226,22 +237,32 @@ void swap(struct node *cp,int i,int j,int k,int l){
 }
 
 struct node *move(struct node *cp,int a,int b,int x,int y,int dir) {
-    printf("Entered MOVE!");
+  printf("Entered MOVE!");
 
   struct node *newp;
   int i,j,k,l,tmp;
-  newp = (struct node*)malloc(sizeof(struct node));
-  newp = cp;
+  newp = (struct node *)malloc(sizeof(struct node));
+  //newp = cp;
 
   for (int i = 0; i < N; i++) {
     for (int j = 0; j < N; j++) {  
       newp->board[i][j] = cp->board[i][j];
     }
   }
+  //a + b location of 0
+  //x + y new location of zero
+  //a + b should have old value in x + y
+  //x + y should have 0
 
-  newp->board[a][b] = 0;
-  newp->board[x][y] = cp->board[a][b];
-
+  newp->board[a][b] = cp->board[x][y];
+  newp->board[x][y] = 0;
+  
+  printf("PRE MOVE\n");
+  print_a_node(cp);
+  printf("POST MOVE\n");
+  print_a_node(newp);
+  
+  
   // malloc - OK
   // copy from cp - OK
   // swap two vals - OK
@@ -255,13 +276,17 @@ struct node *goal_found(struct node *cp,struct node *gp){
   // check if succ list has goal
   // if found, return that for finding path else return NULL
   struct node *succptr;
+
+  succptr = cp;
   
   while (succptr) {
       
       if (nodes_same(succptr, gp)) {
         //same - goal state found
 	printf("FOUND YOUR GOAL!!\n");
+	break;
       } else {
+	printf("TRYING NEXT BOARD\n");
 	succptr = succptr->next;
       }
       
@@ -271,7 +296,6 @@ struct node *goal_found(struct node *cp,struct node *gp){
 }
 
 int count(struct node *cp) {
-  printf("Entered COUTN");
   int cnt=0;
   //return the number of nodes on the list
   struct node *tp;
@@ -279,7 +303,6 @@ int count(struct node *cp) {
   
   while(tp)
   {
-    printf("Count: %d", cnt);
     cnt++;
     tp = tp->next;
   }
