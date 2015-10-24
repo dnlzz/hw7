@@ -64,7 +64,8 @@ int main(int argc,char **argv) {
   // perm=solvable(start);		/* check if solvable permutation */
   //if (perm & 1) return 1;
 
-  open=start; 
+  open=start;
+  open->next=NULL;
   iter=0;
   
   while (open) {
@@ -330,16 +331,21 @@ struct node *merge(struct node *succ,struct node *open,int flg) {
   if (flg==DFS) {	/* attach in the front: succ -> ... -> open */
     //...
     //prepend succ -> open
-    //    open = prepend(succ, copen);
-
+    printf("MERGE: DFS PREPEND");
+    open = prepend(csucc, copen);
+    
   }else if (flg==BFS) {	  /* attach at the end: open -> ... -> succ */
     //...
-    //open = append(succ, copen);
-
+    printf("MERGE: BFS  APPEND");
+    open = append(csucc, copen);
+    //iter through open until open->next == NUll then set open->next = succ.
+    
   }else if (flg==BEST) {	/* Best first: sort on h value */
     //...
   }else{			/* A* search: sort on f=g+h value */
     //...
+    printf("MERGE: ELSE PREPEND");
+    open = prepend(csucc, copen);
   }
   return open;
 }
