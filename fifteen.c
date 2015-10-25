@@ -80,12 +80,12 @@ int main(int argc,char **argv) {
     total=total+cnt;
     if (succ) open=merge(succ,open,strategy);/* New open list */
     closed=append(cp,closed);		      /* New closed */
-    printf("SUCC: \n");
+    /*printf("SUCC: \n");
     print_nodes(succ);
     printf("OPEN: \n");
     print_nodes(open);
     printf("CLOSED: \n");
-    print_nodes(closed);
+    print_nodes(closed);*/
     if ((cp=goal_found(succ,goal))) break;    
     iter++;
   }
@@ -168,14 +168,17 @@ struct node *expand(struct node *cp) {
   if((i+1) < N){		/* DOWN */
     tp = move(cp,i,j,i+1,j,DN);
     succ = append(tp,succ);
+    
   }
   if((j+1) < N){		/* RIGHT */
     tp = move(cp,i,j,i,j+1,RT);
     succ = append(tp,succ);
+    
   }
   if((i-1) >= 0){		/* UP */
     tp = move(cp,i,j,i-1,j,UP);
     succ = append(tp,succ);
+    
   }
   if((j-1) >= 0){		/* LEFT */
     tp = move(cp,i,j,i,j-1,LT);
@@ -196,13 +199,9 @@ struct node *prepend(struct node *tp,struct node *sp) {
   if (sp == NULL) {
     sp = tp;
   } else {
-
-    while (tp->next != NULL) {
-      cp = cp->next;
-    }
-
-    cp->next = sp;
-    sp = tp;
+    
+    // cp->next = sp;
+    //sp = tp;
 
   }
 
@@ -242,7 +241,7 @@ struct node *move(struct node *cp,int a,int b,int x,int y,int dir) {
   //printf("Entered MOVE!");
 
   struct node *newp;
-  int i,j,k,l,tmp;
+  int i,j,k,l,tmp, f, g, h;
   newp = (struct node *)malloc(sizeof(struct node));
 
   for (int i = 0; i < N; i++) {
@@ -250,25 +249,21 @@ struct node *move(struct node *cp,int a,int b,int x,int y,int dir) {
       newp->board[i][j] = cp->board[i][j];
     }
   }
-  //a + b location of 0
-  //x + y new location of zero
-  //a + b should have old value in x + y
-  //x + y should have 0
 
   newp->board[a][b] = cp->board[x][y];
   newp->board[x][y] = 0;
-  
-  /* printf("PRE MOVE\n"); */
-  /* print_a_node(cp); */
-  /* printf("POST MOVE\n"); */
-  /* print_a_node(newp); */
-  
+  newp->board[N][N-1] = dir;
+
+  h = find_h(newp, goal);
+  newp->board[N][HVAL] = h;
+
+  print_a_node(newp);
   
   // malloc - OK
   // copy from cp - OK
   // swap two vals - OK
   // compute f,g,h
-  // insert the direction that resulted in this node, used for printing path
+  // insert the direction that resulted in this node, used for printing path - OK?
   return newp;
 }
 
@@ -282,18 +277,18 @@ struct node *goal_found(struct node *cp,struct node *gp){
   
   while (succptr) {
 
-    printf("Looking for goal!\n");
+    //printf("Looking for goal!\n");
     
       if (nodes_same(succptr, gp)) {
         //same - goal state found
 	printf("FOUND YOUR GOAL!!\n");
 	break;
       } else {
-	printf("TRYING NEXT BOARD\n");
+	//printf("TRYING NEXT BOARD\n");
 	succptr = succptr->next;
       }
 
-      printf("NO MORE SUCC");
+      //printf("NO MORE SUCC");
       cp = succptr;
   }
   
@@ -340,6 +335,13 @@ struct node *merge(struct node *succ,struct node *open,int flg) {
     //...
   }else{			/* A* search: sort on f=g+h value */
     //...
+
+    open = append(succ, open)
+      /*
+    while (csucc) {
+      //insert sort based on f value - temporarily use h value
+    }
+      */
   }
   return open;
 }
@@ -355,10 +357,21 @@ struct node *insert_node(struct node *succ,struct node *open,int x) {
    return open;
 }
 
-int find_h(int current[N+1][N],int goalp[N+1][N]) {
-  int h=0,i,j,k,l,done;
+/**changed fuction parameters!**/
+int find_h(struct node *current,struct node *goalp) {
+  int h=0,i,j,k=0,l=0,done;
   // ...
-  //loop through each puzzle and calculate each current distance to final location
+  //loop through each puzzle and calculate each current distance to final location?
+
+  for (i = 0; i < N; i++, k++) {
+    for (j = 0; j < N; j++, l++) {
+      if (current->board[i][j] == goalp->board[k][l]) { h+=0; continue; }
+      else {
+	h += (abs(k-i) + abs(l-j));
+      }
+    }
+  }
+  
   return h;
 }
 
@@ -369,11 +382,11 @@ int nodes_same(struct node *xp,struct node *yp) {
   for (i = 0; i < N; i ++)
     for (j = 0; j < N; j++) {
       if ( xp->board[i][j] != yp->board[i][j] ) {
-	printf("not the same!\n");
-	printf("NODE SAME SUCC:\n");
-	print_a_node(xp);
-	printf("NODE SAME OPEN/CLOSED!\n");
-	print_a_node(yp);
+	/* printf("not the same!\n"); */
+	/* printf("NODE SAME SUCC:\n"); */
+	/* print_a_node(xp); */
+	/* printf("NODE SAME OPEN/CLOSED!\n"); */
+	/* print_a_node(yp); */
         return flg;
       }      
     }
@@ -389,30 +402,25 @@ int nodes_same(struct node *xp,struct node *yp) {
 struct node *filter(struct node *succ,struct node *hp){ 
   printf("Entered FILEERET!");
 
-  struct node *lsp,*rsp, *tmp;	/* lsp=left succ p, rsp=right succ p */
+  struct node *lsp,*rsp;	/* lsp=left succ p, rsp=right succ p */
    struct node *tp, *closed;		/* temp ptr */
    //...
-   lsp = rsp = tmp = succ; // succ
+   lsp = rsp = succ; // succ
    tp = hp;  //open - closed
    
    while (tp) {
-     printf("FIRST FILTER WHILE\n");
+     //printf("FIRST FILTER WHILE\n");
      while (lsp) {
-       printf("SECOND FILTER WHILE\n");
+       //printf("SECOND FILTER WHILE\n");
        if (nodes_same(lsp, tp)) {
-	 lsp = lsp->next;
 	 //same - remove from open? or succ?
 	 printf("NODE THE SAME - REMOVE ME!\n");
-	 print_nodes(rsp);
-	 print_nodes(lsp);
-	 rsp->next = lsp;
-	 print_nodes(rsp);
-	 print_nodes(lsp);
+	 lsp = lsp->next;
        } else {
 	 //	 printf("NOT THE SAME - CONTINUE\n");
 	 //	 print_a_node(tp);
 	 lsp = lsp->next;
-	 rsp = rsp->next;
+	 //	 rsp = rsp->next;
        }
 
        
@@ -422,10 +430,6 @@ struct node *filter(struct node *succ,struct node *hp){
      tp = tp->next;
     
    }
-
-   tmp = rsp;
-
-   succ = tmp;
    
    return succ;
 }
