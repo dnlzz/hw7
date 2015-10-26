@@ -238,7 +238,7 @@ void swap(struct node *cp,int i,int j,int k,int l){
 }
 
 struct node *move(struct node *cp,int a,int b,int x,int y,int dir) {
-  //printf("Entered MOVE!");
+  printf("Entered MOVE!");
 
   struct node *newp;
   int i,j,k,l,tmp, f, g, h;
@@ -336,7 +336,7 @@ struct node *merge(struct node *succ,struct node *open,int flg) {
   }else{			/* A* search: sort on f=g+h value */
     //...
 
-    open = append(succ, open)
+    open = append(succ, open);
       /*
     while (csucc) {
       //insert sort based on f value - temporarily use h value
@@ -359,15 +359,15 @@ struct node *insert_node(struct node *succ,struct node *open,int x) {
 
 /**changed fuction parameters!**/
 int find_h(struct node *current,struct node *goalp) {
-  int h=0,i,j,k=0,l=0,done;
+  int h=0,i,j,k=0,l=0,done, n=3;
   // ...
   //loop through each puzzle and calculate each current distance to final location?
 
-  for (i = 0; i < N; i++, k++) {
-    for (j = 0; j < N; j++, l++) {
-      if (current->board[i][j] == goalp->board[k][l]) { h+=0; continue; }
+  for (i = 0; i < n; i++, k++) {
+    for (j = 0; j < n; j++, l++) {
+      if (current->board[i][j] == i) continue; 
       else {
-	h += (abs(k-i) + abs(l-j));
+         h += (abs(current->board[i][j]/n - i/n) + abs(current->board[i][j]%n - i%n));
       }
     }
   }
