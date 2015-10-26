@@ -257,8 +257,6 @@ struct node *move(struct node *cp,int a,int b,int x,int y,int dir) {
   h = find_h(newp, goal);
   newp->board[N][HVAL] = h;
 
-  print_a_node(newp);
-  
   // malloc - OK
   // copy from cp - OK
   // swap two vals - OK
@@ -335,7 +333,7 @@ struct node *merge(struct node *succ,struct node *open,int flg) {
     //...
   }else{			/* A* search: sort on f=g+h value */
     //...
-
+printf("MERGE: ASTAR ELSE");
     open = append(succ, open);
       /*
     while (csucc) {
