@@ -238,13 +238,13 @@ void swap(struct node *cp,int i,int j,int k,int l){
 }
 
 struct node *move(struct node *cp,int a,int b,int x,int y,int dir) {
-  printf("Entered MOVE!");
+  //printf("Entered MOVE!");
 
   struct node *newp;
-  int i,j,k,l,tmp, f, g, h;
+  int i,j,k,l,tmp, f, g, h = 0;
   newp = (struct node *)malloc(sizeof(struct node));
 
-  for (int i = 0; i < N; i++) {
+  for (int i = 0; i < N+1; i++) {
     for (int j = 0; j < N; j++) {  
       newp->board[i][j] = cp->board[i][j];
     }
@@ -262,8 +262,8 @@ struct node *move(struct node *cp,int a,int b,int x,int y,int dir) {
   // malloc - OK
   // copy from cp - OK
   // swap two vals - OK
-  // compute f,g,h
-  // insert the direction that resulted in this node, used for printing path - OK?
+  // compute f,g,h - h-OK - g-??? - f-easy once g
+  // insert the direction that resulted in this node, used for printing path - OK
   return newp;
 }
 
@@ -360,17 +360,39 @@ struct node *insert_node(struct node *succ,struct node *open,int x) {
 /**changed fuction parameters!**/
 int find_h(struct node *current,struct node *goalp) {
   int h=0,i,j,k=0,l=0,done, n=3;
+  int targetX, targetY;
   // ...
-  //loop through each puzzle and calculate each current distance to final location?
+  //loop through current puzzle and calculate each current distance to final location?
 
-  for (i = 0; i < n; i++, k++) {
-    for (j = 0; j < n; j++, l++) {
-      if (current->board[i][j] == i) continue; 
+  printf("\nFIND-H\n");
+
+  for (i = 0; i < N; i++) {
+    for (j = 0; j < N; j++) {
+      //if (current->board[i][j] == goalp->board[i][j]) continue; 
+      if (current->board[i][j] == 0) {
+        targetX = N-1;
+        targetY = N-1;
+        h += ( abs(i - targetX)) + (abs(j - targetY) );
+         // printf("Value: %d\n", current->board[i][j]);
+         // printf("tX: %d : tY: %d\n", targetX, targetY);
+         // printf("i-targetX: %d : j-targetY%d\n", i-targetX, j-targetY);
+         // printf("abs: %d : abs: %d\n", abs(i-targetX), (j-targetY));
+         // printf("h : %d\n", h);
+      }
       else {
-         h += (abs(current->board[i][j]/n - i/n) + abs(current->board[i][j]%n - i%n));
+         targetX = (current->board[i][j] - 1) / N;
+         targetY = (current->board[i][j] - 1) % N;
+         // printf("Value: %d\n", current->board[i][j]);
+         // printf("tX: %d : tY: %d\n", targetX, targetY);
+         // printf("i-targetX: %d : j-targetY%d\n", i-targetX, j-targetY);
+         // printf("abs: %d : abs: %d\n", abs(i-targetX), (j-targetY));
+         h += ( abs(i - targetX)) + (abs(j - targetY) );
+         // printf("h : %d\n", h);
       }
     }
   }
+
+  //printf("%d\n", h);
   
   return h;
 }
