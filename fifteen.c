@@ -152,7 +152,7 @@ void find_parent(struct node *cp,int prev_dir){
 // Expand: generate successors of the current node
 struct node *expand(struct node *cp) {
 
-  printf("Entered EXPAND");
+  //printf("Entered EXPAND");
   level++;
 
   int i,j,k,cnt,row=0,col=j;
@@ -186,8 +186,6 @@ struct node *expand(struct node *cp) {
     succ = append(tp,succ);
   }
 
-  //LEVEL HERE?
-  tp->board[N][GVAL] = level;
 
   return succ;
 }
@@ -195,7 +193,7 @@ struct node *expand(struct node *cp) {
 /* attach in the beginning */
 struct node *prepend(struct node *tp,struct node *sp) {
   //.....
-    printf("Entered PRE{END");
+  //printf("Entered PRE{END");
     struct node *cp, *hp;
     cp = hp = tp;
     
@@ -240,8 +238,16 @@ struct node *append(struct node *tp,struct node *sp) {
   return sp;
 }
 
-void swap(struct node *cp,int i,int j,int k,int l){
-  int tmp;
+void swap(struct node *ip, struct node *cp){
+  struct node *tmp;
+  tmp = (struct node*)malloc(sizeof(struct node));
+  for (int i = 0; i < N; i++) {
+    for (int j=0; j < N; j++) {
+      tmp->board[i][j] = ip->board[i][j];
+      ip->board[i][j] = cp->board[i][j];
+      cp->board[i][j] = tmp->board[i][j];
+    }
+  }
   //...  
 }
 
@@ -262,8 +268,13 @@ struct node *move(struct node *cp,int a,int b,int x,int y,int dir) {
   newp->board[x][y] = 0;
   newp->board[N][N-1] = dir;
 
-  //h = find_h(newp, goal);
+  g = level;
+  h = find_h(newp, goal);
+  f = g + h;
+
   newp->board[N][HVAL] = h;
+  newp->board[N][GVAL] = g;
+  newp->board[N][FVAL] = f;
 
   // malloc - OK
   // copy from cp - OK
@@ -319,7 +330,7 @@ int count(struct node *cp) {
 struct node *merge(struct node *succ,struct node *open,int flg) {
 
   printf("Entered MERGE!");
-  struct node *csucc,*copen, *tmp;
+  struct node *csucc,*copen, *tp, *tmp;
 
   csucc = succ;
   copen = open;
@@ -328,12 +339,12 @@ struct node *merge(struct node *succ,struct node *open,int flg) {
   if (flg==DFS) {	/* attach in the front: succ -> ... -> open */
     //...
     //prepend succ -> open
-    printf("MERGE: DFS PREPEND");
+    //printf("MERGE: DFS PREPEND");
     open = prepend(csucc, copen);
     
   }else if (flg==BFS) {	  /* attach at the end: open -> ... -> succ */
     //...
-    printf("MERGE: BFS  APPEND");
+    //printf("MERGE: BFS  APPEND");
     open = append(csucc, copen);
     //iter through open until open->next == NUll then set open->next = succ.
     
@@ -341,17 +352,31 @@ struct node *merge(struct node *succ,struct node *open,int flg) {
     //...
   }else{			/* A* search: sort on f=g+h value */
     //...
-printf("MERGE: ASTAR ELSE");
-    open = append(succ, open);
-      /*
-    while (csucc) {
-      //insert sort based on f value - temporarily use h value
-    }
-      */
+
+    printf("MERGE: ASTAR ELSE");
+    open = prepend(csucc, copen);
+    tp = open;
+    copen = copen->next;
+    /*
+    while (copen)
+      {
+	while (tp != copen)
+	  {
+	    if(tp->board[N][FVAL] > copen->board[N][FVAL])
+	      swap(copen, tp);
+	    else
+	      tp = tp->next;
+	  }
+
+	copen = copen->next;
+	
+      }
+    
+    */
+   
   }
   return open;
 }
-
 
 /* insert succ into open in ascending order of x value, where x is an array 
    index: 0=f,1=g,h=2 of board[N][x]
