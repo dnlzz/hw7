@@ -146,14 +146,15 @@ void find_path(struct node *cp,struct node *opnp,struct node *cldp){
 }
 
 void find_parent(struct node *cp,int prev_dir){
-  int i,j,k,cnt,row=0,col=j;
+  int i,j,k,cnt,row=0,col=j, level = 0;
 }
 
 // Expand: generate successors of the current node
 struct node *expand(struct node *cp) {
 
   printf("Entered EXPAND");
-  
+  level++;
+
   int i,j,k,cnt,row=0,col=j;
   struct node *succ,*tp;
   succ=NULL;
@@ -185,6 +186,8 @@ struct node *expand(struct node *cp) {
     succ = append(tp,succ);
   }
 
+  //LEVEL HERE?
+  tp->board[N][GVAL] = level;
 
   return succ;
 }
@@ -259,7 +262,7 @@ struct node *move(struct node *cp,int a,int b,int x,int y,int dir) {
   newp->board[x][y] = 0;
   newp->board[N][N-1] = dir;
 
-  h = find_h(newp, goal);
+  //h = find_h(newp, goal);
   newp->board[N][HVAL] = h;
 
   // malloc - OK
