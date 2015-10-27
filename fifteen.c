@@ -193,15 +193,20 @@ struct node *expand(struct node *cp) {
 struct node *prepend(struct node *tp,struct node *sp) {
   //.....
     printf("Entered PRE{END");
-    struct node *cp;
-    cp = tp;
+    struct node *cp, *hp;
+    cp = hp = tp;
     
   if (sp == NULL) {
     sp = tp;
   } else {
+    while (cp->next != NULL) {
+
+      cp = cp->next;
+
+    }
     
-    // cp->next = sp;
-    //sp = tp;
+    cp->next = sp;
+    sp = hp;
 
   }
 
